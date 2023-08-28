@@ -158,3 +158,36 @@ for txt in tqdm(infer_txt_list):
             file_name, class_id, confidence, point1_x, point1_y, point2_x, point2_y, point3_x, point3_y, point4_x, point4_y = yolo_to_labelme(line, img_width, img_height, txt)
             submit = submit.append({'file_name':file_name, 'class_id':class_id, 'confidence':confidence, 'point1_x':point1_x, 'point1_y':point1_y, 'point2_x':point2_x, 'point2_y':point2_y, 'point3_x':point3_x, 'point3_y':point3_y, 'point4_x':point4_x, 'point4_y':point4_y}, ignore_index=True)
 ```
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+## Data_mixAug
+**Set transform**
+```python
+train_tfms = A.Compose([
+        A.OneOf([
+            A.ISONoise(p=1.0, intensity=(0.39, 0.82)),
+            A.GaussNoise(p=1.0, var_limit=(15.0, 50.0))
+        ], p=0.5),
+
+        A.OneOf([
+            A.MotionBlur(p=1.0, blur_limit=(5, 15)),
+            A.GaussianBlur (p=1.0, blur_limit = (3,9)),
+            A.ImageCompression(p=1.0, quality_lower=25, quality_upper=40),
+        ], p=0.4),
+
+
+        A.RandomBrightnessContrast(p=0.5),
+        A.RandomGamma(p=0.6)
+      ])
+  ```
+
+**Apply to image**
+```python
+def apply_transforms_and_save(input_file_path, output_folder):
+  image = cv2.imread(input_file_path)
+  transformed_image = train_tfms(image=image)["image"]
+
+    # NumPy 배열로 변환
+  transformed_image = np.array(transformed_image)
+  output_file_path = os.path.join(output_folder, input_file_path[-13:])
+  cv2.imwrite(output_file_path, transformed_image)
+```
