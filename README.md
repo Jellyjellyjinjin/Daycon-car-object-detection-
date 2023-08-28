@@ -121,6 +121,8 @@ with open(os.path.join(root_dir, "custom.yaml"), "w") as f:
 ## 4. Run
 **Freeze backbone**
 ![image](https://github.com/Jellyjellyjinjin/Daycon-car-object-detection-/assets/118363210/10f5055f-3f2c-428a-8a51-c9379eb407ff)
+
+
 ```python
 %%time
 %cd /content/yolov5
@@ -131,7 +133,10 @@ if TRAIN:
     --freeze 10 --project=f"{savepath}/freeze" \
     --optimizer Adam --seed 42 --hyp /content/yolov5/data/hyps/hyp.scratch-low.yaml
 ```
-
+**hyperparameters**
+ * 학습 : lr0=0.001, lrf=0.01, warmup_epochs=3.0
+ * 색 : hsv_h=0.015, hsv_s=0.7, hsv_v=0.4
+ * 이미지: mosaic=1.0, degrees=0.0(image rotation), translate=0.0, scale=0.0, shear=0.0, perspective=0.0, flipud=0.0, fliplr=0.0, mixup=0.0, 
 
 ## 5. Inference
 ```python
